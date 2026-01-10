@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://dadp4iq5fxc4o"]
+
+[ext_resource type="Script" path="res://system.gd" id="1_kof7v"]
+[ext_resource type="Texture2D" uid="uid://bvbwcn6dubrmb" path="res://img/system/bar.png" id="2_aj5tb"]
+[ext_resource type="Script" path="res://bar.gd" id="3_y0ce8"]
+[ext_resource type="PackedScene" uid="uid://dme7rbso5dib1" path="res://sysscenes/subscreen.tscn" id="5_ns23d"]
+
+[node name="system" type="CanvasLayer"]
+script = ExtResource("1_kof7v")
+
+[node name="Subscreen" parent="." instance=ExtResource("5_ns23d")]
+process_mode = 2
+position = Vector2(128, 40)
+
+[node name="Lifebar" type="Sprite2D" parent="."]
+position = Vector2(28, 52)
+texture = ExtResource("2_aj5tb")
+script = ExtResource("3_y0ce8")

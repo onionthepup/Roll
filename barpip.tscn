@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://chiewgepaf8wr"]
+
+[ext_resource type="Texture2D" uid="uid://dei7mh88lwles" path="res://img/system/barpip.png" id="1_6vcig"]
+
+[node name="barpip" type="Sprite2D"]
+texture = ExtResource("1_6vcig")

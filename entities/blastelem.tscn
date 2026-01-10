@@ -1,0 +1,47 @@
+[gd_scene load_steps=8 format=3 uid="uid://b1fu513jef3ri"]
+
+[ext_resource type="Texture2D" uid="uid://bevjwchqj4a6" path="res://img/char/blast.png" id="1_sg4nb"]
+[ext_resource type="Script" path="res://entities/blastelem.gd" id="2_6e0v8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f155u"]
+atlas = ExtResource("1_sg4nb")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_djmci"]
+atlas = ExtResource("1_sg4nb")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5wpyt"]
+atlas = ExtResource("1_sg4nb")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4jnsk"]
+atlas = ExtResource("1_sg4nb")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_e1huc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f155u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_djmci")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5wpyt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4jnsk")
+}],
+"loop": true,
+"name": &"base",
+"speed": 8.0
+}]
+
+[node name="blastelem" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_e1huc")
+animation = &"base"
+autoplay = "base"
+frame_progress = 0.149837
+script = ExtResource("2_6e0v8")

@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://cwhgv50wsrrkh"]
+
+[ext_resource type="Texture2D" uid="uid://d2y16jf35w6xn" path="res://img/tile/temp.png" id="1_13y05"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3xvps"]
+texture = ExtResource("1_13y05")
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:0/0 = 0
+1:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+1:0/0/physics_layer_0/angular_velocity = 0.0
+
+[sub_resource type="TileSet" id="TileSet_j8uar"]
+physics_layer_0/collision_layer = 1
+sources/1 = SubResource("TileSetAtlasSource_3xvps")
+
+[node name="tile" type="TileMap"]
+tile_set = SubResource("TileSet_j8uar")
+format = 2
+layer_0/name = "Ground"
+layer_0/tile_data = PackedInt32Array(917504, 1, 0, 851968, 1, 0, 851969, 1, 0, 851970, 1, 0, 851971, 1, 0, 851972, 1, 0, 851973, 1, 0, 851974, 1, 0, 851975, 1, 0, 851976, 1, 0, 851977, 1, 0, 851978, 1, 0, 851979, 1, 0, 851980, 1, 0, 851981, 1, 0, 851982, 1, 0, 851983, 1, 0, 917519, 1, 0, 917518, 1, 0, 917517, 1, 0, 917516, 1, 0, 917515, 1, 0, 917514, 1, 0, 917513, 1, 0, 917512, 1, 0, 917511, 1, 0, 917510, 1, 0, 917509, 1, 0, 917508, 1, 0, 917507, 1, 0, 917506, 1, 0, 917505, 1, 0, 65535, 1, 0, 131071, 1, 0, 196607, 1, 0, 262143, 1, 0, 327679, 1, 0, 589823, 1, 0, 655359, 1, 0, 393215, 1, 0, 458751, 1, 0, 524287, 1, 0, 720895, 1, 0, 786431, 1, 0, 851967, 1, 0, 917503, 1, 0, 983039, 1, 0, 917520, 1, 0, 851984, 1, 0, 786448, 1, 0, 720912, 1, 0, 655376, 1, 0, 589840, 1, 0, 16, 1, 0, 65552, 1, 0, 131088, 1, 0, 196624, 1, 0, 262160, 1, 0, 327696, 1, 0, 393232, 1, 0, 458768, 1, 0, 524304, 1, 0)
