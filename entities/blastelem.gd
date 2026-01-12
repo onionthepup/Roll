@@ -6,8 +6,8 @@ var angle = 15
 
 func _process(delta):
 	position += speed * direction * delta
-	rotateby(angle)
-	angle *= 0.90
+	rotateby(-angle)
+	angle *= 0.9
 
 func rotateby(angle):
 	var rad = angle * PI / 180.0

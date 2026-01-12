@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=3 uid="uid://du76plegllusi"]
+
+[ext_resource type="Texture2D" uid="uid://cacuudujpjehy" path="res://img/char/met.png" id="1_4miyl"]
+[ext_resource type="Script" path="res://entities/met.gd" id="1_4tda6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h4i0y"]
+size = Vector2(18, 15)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4xpr2"]
+atlas = ExtResource("1_4miyl")
+region = Rect2(18, 0, 18, 15)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ergkc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4xpr2")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rnyty"]
+size = Vector2(20, 16)
+
+[node name="Met" type="CharacterBody2D"]
+collision_layer = 32
+script = ExtResource("1_4tda6")
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_h4i0y")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 0.5)
+sprite_frames = SubResource("SpriteFrames_ergkc")
+animation = &"idle"
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+
+[node name="Shape" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_rnyty")
+
+[node name="Onscreen" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(0, -1.90735e-06)
+rect = Rect2(-48, -8, 96, 16)

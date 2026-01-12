@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://bccqiphax4b3c"]
+[gd_scene load_steps=29 format=3 uid="uid://bccqiphax4b3c"]
 
 [ext_resource type="Script" path="res://entities/roll.gd" id="1_jk8lx"]
 [ext_resource type="Texture2D" uid="uid://q3t25iwgvuq8" path="res://img/char/roll.png" id="2_rok3n"]
@@ -6,6 +6,8 @@
 [ext_resource type="AudioStream" uid="uid://cnqkvb0g05a04" path="res://sound/buster.wav" id="4_vkj8c"]
 [ext_resource type="AudioStream" uid="uid://ddi7t0lpaha4r" path="res://sound/defeat.wav" id="5_xgfta"]
 [ext_resource type="Script" path="res://sysscenes/CameraControl.gd" id="6_aduug"]
+[ext_resource type="Texture2D" uid="uid://bvbwcn6dubrmb" path="res://img/system/bar.png" id="7_7ejfo"]
+[ext_resource type="Texture2D" uid="uid://b83130f3lgfqa" path="res://img/system/lifebar.png" id="8_5dqm7"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pdjil"]
 atlas = ExtResource("2_rok3n")
@@ -34,6 +36,10 @@ region = Rect2(192, 64, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_qfi3t"]
 atlas = ExtResource("2_rok3n")
 region = Rect2(224, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_17ky8"]
+atlas = ExtResource("2_rok3n")
+region = Rect2(64, 96, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b5ke4"]
 atlas = ExtResource("2_rok3n")
@@ -120,6 +126,14 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_17ky8")
+}],
+"loop": true,
+"name": &"hurt",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_b5ke4")
 }],
 "loop": true,
@@ -189,11 +203,12 @@ animations = [{
 size = Vector2(14, 24)
 
 [node name="Roll" type="CharacterBody2D"]
+collision_layer = 80
 script = ExtResource("1_jk8lx")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_8qhhg")
-animation = &"climb_top"
+animation = &"hurt"
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 position = Vector2(-1, 4)
@@ -221,16 +236,40 @@ process_mode = 2
 script = ExtResource("6_aduug")
 
 [node name="UpperLadderDetector" type="RayCast2D" parent="."]
-position = Vector2(0, -16)
+position = Vector2(0, -14)
 target_position = Vector2(0, 16)
 collision_mask = 2
 
 [node name="LadderDetector" type="RayCast2D" parent="."]
-position = Vector2(0, -14)
-target_position = Vector2(0, 30)
+position = Vector2(0, -8)
+target_position = Vector2(0, 24)
 collision_mask = 2
 
 [node name="UnderLadderDetector" type="RayCast2D" parent="."]
 position = Vector2(0, 16)
 target_position = Vector2(0, 4)
 collision_mask = 2
+
+[node name="Canvas" type="CanvasLayer" parent="."]
+
+[node name="LifeBar" type="Sprite2D" parent="Canvas"]
+position = Vector2(28, 52)
+texture = ExtResource("7_7ejfo")
+
+[node name="AmmoBar" type="Sprite2D" parent="Canvas"]
+visible = false
+position = Vector2(20, 52)
+texture = ExtResource("7_7ejfo")
+
+[node name="LifePips" type="Sprite2D" parent="Canvas"]
+position = Vector2(28, 52)
+texture = ExtResource("8_5dqm7")
+centered = false
+offset = Vector2(-3, -28)
+
+[node name="AmmoPips" type="Sprite2D" parent="Canvas"]
+visible = false
+position = Vector2(20, 52)
+texture = ExtResource("8_5dqm7")
+centered = false
+offset = Vector2(-3, -28)

@@ -1,9 +1,10 @@
-extends "res://entities/entity.gd"
+extends Entity
 
 var direction = Vector2.ZERO
 @onready var animated_sprite : AnimatedSprite2D = $Sprite
 @onready var landsound : AudioStreamPlayer = $Landing
 @onready var bustersound : AudioStreamPlayer = $Shooting
+@onready var lifebar : Sprite2D = $Canvas/LifePips
 
 var bullet = preload("res://entities/bullet.tscn")
 var blastelem = preload("res://entities/blastelem.tscn")
@@ -11,7 +12,6 @@ var blastelem = preload("res://entities/blastelem.tscn")
 var speed = 82.5   #1.6
 var airspeed = 78.75
 var jumpspeed = 294.375   #4.DF in 1~2, or 4.A5 in 3, or 4.C0 in 4
-var gravity = 900.0 #0.4
 var accelspeed = 15.0 #was 0.2->7.5; average of rockman3 is 8.65
 var acceltime = 0.116 #7; time spent in accel
 var accelcount = 0
@@ -24,15 +24,20 @@ var bulletspeed = 240 #4 pixels/frame
 var busterout = 0.25 #buster stays out 15 frames
 var busteranim = 0.0
 
-var hp = 28
+#var hp = 28
 var ammo = [28,-1,-1,-1,-1,-1,-1,-1,-1]
+
+var weaponlist = [Weapon.new(), Power_Shot.new(), NeedleShot.new(), null]
+var equipped = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	hp = 28
 	updatehp()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	#print(weaponlist[1].curr_ammo())
 	if position.y < $Camera.limit_top:
 		$Camera/CameraControl.adjust(-1)
 	elif position.y > $Camera.limit_bottom:
@@ -45,7 +50,20 @@ func _physics_process(delta):
 #	elif not $LadderDetector.is_colliding():
 #		on_ladder = false
 	
-	if $LadderDetector.is_colliding():
+#	if $UpperLadderDetector.is_colliding():
+#		print("upper O")
+#	else:
+#		print("upper X")
+#	if $LadderDetector.is_colliding():
+#		print("midle O")
+#	else:
+#		print("midle X")
+#	if $UnderLadderDetector.is_colliding():
+#		print("under O")
+#	else:
+#		print("under X")
+	
+	if $LadderDetector.is_colliding() or $UpperLadderDetector.is_colliding():
 		if Input.is_action_pressed("up"):
 			on_ladder = true
 			position.x = 16 * round((position.x+8)/16) - 8
@@ -56,8 +74,9 @@ func _physics_process(delta):
 		position.x = 16 * round((position.x+8)/16) - 8
 		position.y -= 1
 		on_ladder = true
-		self.set_collision_mask_value(1,false)
+		self.set_collision_mask_value(1,false) #sets collision to 0 to be able to get to the top of ladders
 	
+	#sets collision back to 1 after climbing a ladder
 	if not on_ladder:
 		self.set_collision_mask_value(1,true)
 	
@@ -207,12 +226,22 @@ func buster():
 
 func damage(value):
 	hp -= value
+	if hp < 0:
+		hp = 0
 	updatehp()
-	if hp <= 0:
+	if hp == 0:
 		death()
-	
+
+func heal(value):
+	hp += value
+	if hp > maxhp:
+		hp = maxhp
+	updatehp()
+
 func updatehp():
-	get_parent().updatehp(hp)
+	lifebar.region_rect = Rect2(0,56-2*hp,6,2*hp)
+	lifebar.position.y = 108 - 2*hp
+	lifebar.region_enabled = true
 
 func death():
 	$Dying.play()
@@ -227,9 +256,44 @@ func death():
 	while angle < 4*PI:
 		blasty(Vector2(cos(angle)/2,sin(angle)/2))
 		angle += PI/2
-	
-func blasty(angle):
+
+func blasty(angle): #death animation
 	var elem = blastelem.instantiate()
 	elem.direction = angle
 	elem.position = position
 	get_parent().add_child(elem)
+
+class RollBuster:
+	var id = 0
+	var cost = 0
+	
+#	var bustersound = $Shooting
+#
+#	func shoot():
+#		bustersound.play()
+#		busteranim = busterout
+#
+#		var blt = bullet.instantiate()
+#
+#		if animated_sprite.flip_h:
+#			$Muzzle.position.x = -16
+#			blt.direction = -1
+#		else:
+#			$Muzzle.position.x = 16
+#
+#		if is_on_floor():
+#			$Muzzle.position.y = 5
+#		else:
+#			$Muzzle.position.y = -1
+#
+#		blt.position = $Muzzle.global_position
+#
+#		get_parent().add_child(blt)
+#		blt.add_to_group("bullets")
+	
+class NeedleShot:
+	var id = 1
+	var cost = 0.25
+
+
+

@@ -64,9 +64,6 @@ pause={
 
 2d_physics/layer_1="floor"
 2d_physics/layer_2="ladder"
-2d_physics/layer_5="enemy hitbox"
-2d_physics/layer_6="player hitbox"
-2d_physics/layer_7="Items"
 
 [rendering]
 

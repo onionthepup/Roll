@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://1auypeauelai"]
+[gd_scene load_steps=10 format=3 uid="uid://1auypeauelai"]
 
 [ext_resource type="Script" path="res://stages/test man.gd" id="1_yley2"]
 [ext_resource type="PackedScene" uid="uid://bccqiphax4b3c" path="res://entities/Roll.tscn" id="2_3ss84"]
 [ext_resource type="PackedScene" uid="uid://dadp4iq5fxc4o" path="res://sysscenes/system.tscn" id="3_uovcs"]
 [ext_resource type="Texture2D" uid="uid://d2y16jf35w6xn" path="res://img/tile/temp.png" id="4_a7bsa"]
+[ext_resource type="PackedScene" uid="uid://du76plegllusi" path="res://entities/Met.tscn" id="5_85ksi"]
+[ext_resource type="PackedScene" uid="uid://cmbcjbbglttf3" path="res://entities/cap_hp_large.tscn" id="6_lkhpu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_j6g0x"]
 texture = ExtResource("4_a7bsa")
@@ -49,3 +51,18 @@ position = Vector2(456, -32)
 position = Vector2(0, 4)
 shape = SubResource("RectangleShape2D_yf0rk")
 one_way_collision = true
+
+[node name="Met" parent="." instance=ExtResource("5_85ksi")]
+position = Vector2(440, 200)
+
+[node name="Met2" parent="." instance=ExtResource("5_85ksi")]
+position = Vector2(64, -40)
+
+[node name="Met3" parent="." instance=ExtResource("5_85ksi")]
+position = Vector2(112, -40)
+
+[node name="Met4" parent="." instance=ExtResource("5_85ksi")]
+position = Vector2(184, -40)
+
+[node name="CapHPLarge" parent="." instance=ExtResource("6_lkhpu")]
+position = Vector2(208, 24)
