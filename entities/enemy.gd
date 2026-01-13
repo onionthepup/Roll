@@ -32,7 +32,8 @@ func _process(delta):
 	if flashing > 0:
 		if flashingalter:
 			$Sprite.visible = not $Sprite.visible
-			$Sprite.material.shader = null
+			if flashing < 14:
+				$Sprite.material.shader = null
 		flashingalter = not flashingalter
 		flashing -= 1
 	else:
@@ -60,6 +61,7 @@ func damage(id):
 	else:
 		$Sprite.material.shader = white
 		flashing = 15
+		flashingalter = false
 
 func die():
 	$Sprite.visible = false
