@@ -3,9 +3,11 @@ class_name Pickup
 
 @onready var area : Area2D  = $Area
 @onready var sprite : AnimatedSprite2D  = $Sprite
+@onready var sound : AudioStreamPlayer = $Sound
 var heal = 10
 var operating = false
 var delay = true
+var delay2 = 3
 
 var gravity = 900.0
 var terminalv = 420.0
@@ -24,13 +26,16 @@ func _process(delta):
 	
 	if operating:
 		if heal > 0:
-			if delay:
+			if delay2 == 0: #delay:
 				healing()
+				delay2 = 3
 			else:
-				delay = not delay
+				#delay = not delay
+				delay2 -= 1
 		else:
-			get_tree().paused = false
-			self.queue_free()
+			if not sound.playing:
+				get_tree().paused = false
+				self.queue_free()
 	
 	move_and_slide()
 

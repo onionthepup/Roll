@@ -6,3 +6,5 @@ func healing():
 	else:
 		roll.heal(1)
 		heal -= 1
+		if not sound.playing:
+			sound.play()
