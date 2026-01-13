@@ -1,6 +1,6 @@
 extends Entity
 
-var direction = Vector2.ZERO
+
 @onready var animated_sprite : AnimatedSprite2D = $Sprite
 @onready var landsound : AudioStreamPlayer = $Landing
 @onready var bustersound : AudioStreamPlayer = $Shooting
@@ -11,6 +11,7 @@ var bullet = preload("res://entities/bullet.tscn")
 var blastelem = preload("res://entities/blastelem.tscn")
 
 #movement vars
+var direction = 0
 var speed = 82.5   #1.6
 var airspeed = 78.75
 var jumpspeed = 294.375   #4.DF in 1~2, or 4.A5 in 3, or 4.C0 in 4
@@ -36,6 +37,11 @@ var hurttime = 0 #timer
 
 var takes_input = true #whether player can input anything!
 
+var beaming = false
+var firstbeam = false
+
+@onready var checkpoint = global_position
+
 #var hp = 28
 var ammo = [28,-1,-1,-1,-1,-1,-1,-1,-1]
 
@@ -44,17 +50,23 @@ var equipped = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	spawn()
 	hp = 28
 	updatehp()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if position.y < $Camera.limit_top:
-		$Camera/CameraControl.adjust(-1)
-	elif position.y > $Camera.limit_bottom:
-		$Camera/CameraControl.adjust(1)
+	adjust_camera()
 
 func _physics_process(delta):
+	#beaming in anim
+	if beaming and is_on_floor():
+		if firstbeam:
+			firstbeam = false
+		else:
+			beaming = false
+			takes_input = true
+	
 	if hurttime > 0:
 		animated_sprite.visible = not animated_sprite.visible
 		if hurttime < (invin-hurtanim):
@@ -94,7 +106,8 @@ func _physics_process(delta):
 				velocity.y = 420
 	elif in_air: #handle landing
 		in_air = false
-		landsound.play()
+		if takes_input:
+			landsound.play()
 	
 	#headbonk
 	
@@ -150,6 +163,9 @@ func _physics_process(delta):
 		velocity.x = direction * -45
 		velocity.y += gravity * delta / 2
 	
+	if beaming:
+		velocity.y = 960.0
+	
 	move_and_slide()
 	update_animation()
 	
@@ -159,8 +175,9 @@ func update_animation():
 		state = "_shoot"
 	#can add _climb and _throw states!
 	
-	
-	if hurttime > (invin-hurtanim):
+	if beaming:
+		change_animation("beam")
+	elif hurttime > (invin-hurtanim):
 		change_animation("hurt")
 	elif on_ladder:
 		change_animation("climb" + state)
@@ -202,6 +219,39 @@ func flippy():
 		$Shape.position.x = 1
 	if on_ladder:
 		$Shape.position.x = 0
+
+func adjust_camera():
+	if position.y < $Camera.limit_top:
+		$Camera/CameraControl.adjust(-1)
+	elif position.y > $Camera.limit_bottom:
+		$Camera/CameraControl.adjust(1)
+
+func adjust_camera_quick():
+	while position.y < $Camera.limit_top:
+		$Camera.limit_top -= 240
+		$Camera.limit_bottom -= 240
+	while position.y > $Camera.limit_bottom:
+		$Camera.limit_top += 240
+		$Camera.limit_bottom += 240
+	
+func spawn():
+	#hp needs to be invisible
+	hp = maxhp
+	updatehp()
+	takes_input = false
+	animated_sprite.visible = false
+	global_position = checkpoint
+	adjust_camera_quick()
+	$Canvas/READYTOROLL.visible = true
+	await get_tree().create_timer(3.0).timeout
+	$Canvas/READYTOROLL.visible = false
+	global_position.y = $Camera.limit_top
+	beaming = true
+	firstbeam = true
+	animated_sprite.visible = true
+
+func check_beam():
+	takes_input = true
 
 func jump():
 	velocity.y = -jumpspeed
@@ -267,7 +317,10 @@ func updatehp():
 	lifebar.position.y = 108 - 2*hp
 	lifebar.region_enabled = true
 
+#still playing landing sound
 func death():
+	takes_input = false
+	velocity = Vector2.ZERO
 	$Dying.play()
 	animated_sprite.hide()
 	
@@ -280,6 +333,9 @@ func death():
 	while angle < 4*PI:
 		blasty(Vector2(cos(angle)/2,sin(angle)/2))
 		angle += PI/2
+	
+	await get_tree().create_timer(2.0).timeout
+	spawn()
 
 func blasty(angle): #death animation
 	var elem = blastelem.instantiate()
