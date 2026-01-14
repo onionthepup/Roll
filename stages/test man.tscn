@@ -1,8 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://1auypeauelai"]
+[gd_scene load_steps=10 format=3 uid="uid://1auypeauelai"]
 
 [ext_resource type="Script" path="res://stages/test man.gd" id="1_yley2"]
 [ext_resource type="PackedScene" uid="uid://bccqiphax4b3c" path="res://entities/Roll.tscn" id="2_3ss84"]
-[ext_resource type="PackedScene" uid="uid://dadp4iq5fxc4o" path="res://sysscenes/system.tscn" id="3_uovcs"]
 [ext_resource type="Texture2D" uid="uid://d2y16jf35w6xn" path="res://img/tile/temp.png" id="4_a7bsa"]
 [ext_resource type="PackedScene" uid="uid://du76plegllusi" path="res://entities/Met.tscn" id="5_85ksi"]
 [ext_resource type="PackedScene" uid="uid://cmbcjbbglttf3" path="res://entities/cap_hp_large.tscn" id="6_lkhpu"]
@@ -42,8 +41,6 @@ layer_0/tile_data = PackedInt32Array(851968, 0, 0, 851969, 0, 0, 917505, 0, 0, 9
 
 [node name="Roll" parent="." instance=ExtResource("2_3ss84")]
 position = Vector2(128, 192)
-
-[node name="system" parent="." instance=ExtResource("3_uovcs")]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(456, -32)

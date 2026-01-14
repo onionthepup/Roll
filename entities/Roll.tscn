@@ -1,15 +1,18 @@
-[gd_scene load_steps=39 format=3 uid="uid://bccqiphax4b3c"]
+[gd_scene load_steps=42 format=3 uid="uid://bccqiphax4b3c"]
 
 [ext_resource type="Script" path="res://entities/roll.gd" id="1_jk8lx"]
 [ext_resource type="Texture2D" uid="uid://q3t25iwgvuq8" path="res://img/char/roll.png" id="2_rok3n"]
 [ext_resource type="AudioStream" uid="uid://cvdhdsrog0lop" path="res://sound/land.wav" id="3_uqqri"]
 [ext_resource type="AudioStream" uid="uid://cnqkvb0g05a04" path="res://sound/buster.wav" id="4_vkj8c"]
+[ext_resource type="AudioStream" uid="uid://djfutbkqfikgd" path="res://sound/atomic_fire.wav" id="5_euesd"]
 [ext_resource type="AudioStream" uid="uid://ddi7t0lpaha4r" path="res://sound/defeat.wav" id="5_xgfta"]
 [ext_resource type="Script" path="res://sysscenes/CameraControl.gd" id="6_aduug"]
 [ext_resource type="AudioStream" uid="uid://ch201b771ttru" path="res://sound/getdamage mm1.wav" id="6_guxj4"]
 [ext_resource type="Texture2D" uid="uid://bvbwcn6dubrmb" path="res://img/system/bar.png" id="7_7ejfo"]
 [ext_resource type="Texture2D" uid="uid://b83130f3lgfqa" path="res://img/system/lifebar.png" id="8_5dqm7"]
+[ext_resource type="Texture2D" uid="uid://ccvyserfpv2ra" path="res://img/system/ammobar.png" id="10_pl810"]
 [ext_resource type="Texture2D" uid="uid://e5eibwvfg823" path="res://img/ready to roll.png" id="10_ymf11"]
+[ext_resource type="PackedScene" uid="uid://dme7rbso5dib1" path="res://sysscenes/subscreen.tscn" id="11_jhodc"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pdjil"]
 atlas = ExtResource("2_rok3n")
@@ -295,6 +298,9 @@ stream = ExtResource("3_uqqri")
 [node name="Shooting" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_vkj8c")
 
+[node name="Flame" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_euesd")
+
 [node name="Dying" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_xgfta")
 
@@ -332,7 +338,6 @@ position = Vector2(28, 52)
 texture = ExtResource("7_7ejfo")
 
 [node name="AmmoBar" type="Sprite2D" parent="Canvas"]
-visible = false
 position = Vector2(20, 52)
 texture = ExtResource("7_7ejfo")
 
@@ -343,14 +348,18 @@ centered = false
 offset = Vector2(-3, -28)
 
 [node name="AmmoPips" type="Sprite2D" parent="Canvas"]
-visible = false
 position = Vector2(20, 52)
-texture = ExtResource("8_5dqm7")
+texture = ExtResource("10_pl810")
 centered = false
 offset = Vector2(-3, -28)
+hframes = 9
 
 [node name="READYTOROLL" type="AnimatedSprite2D" parent="Canvas"]
 position = Vector2(132, 100)
 sprite_frames = SubResource("SpriteFrames_qmybu")
 autoplay = "default"
 frame_progress = 0.9027
+
+[node name="subscreen" parent="Canvas" instance=ExtResource("11_jhodc")]
+process_mode = 2
+position = Vector2(128, 40)

@@ -6,9 +6,15 @@ extends Entity
 @onready var bustersound : AudioStreamPlayer = $Shooting
 @onready var hurtsound : AudioStreamPlayer = $Hurting
 @onready var lifebar : Sprite2D = $Canvas/LifePips
+@onready var subscreen : TileMap = $Canvas/subscreen
+@onready var ammobar : Sprite2D = $Canvas/AmmoPips
+@onready var ammobarbg : Sprite2D = $Canvas/AmmoBar
 
 var bullet = preload("res://entities/bullet.tscn")
 var blastelem = preload("res://entities/blastelem.tscn")
+
+var flame = preload("res://entities/flame.tscn")
+var thrownaxe = preload("res://entities/axe.tscn")
 
 #movement vars
 var direction = 0
@@ -43,9 +49,10 @@ var firstbeam = false
 @onready var checkpoint = global_position
 
 #var hp = 28
-var ammo = [28,-1,-1,-1,-1,-1,-1,-1,-1]
+var ammo = [28,-1,28,-1,-1,-1,28,-1,-1]
+var ammocost = [0,0,1,0,0,0,4,0,0]
 
-var weaponlist = [Weapon.new(), Power_Shot.new(), NeedleShot.new(), null]
+var weaponlist = [Roll_Buster.new(), Power_Shot.new(), NeedleShot.new(), null]
 var equipped = 0
 
 # Called when the node enters the scene tree for the first time.
@@ -53,10 +60,13 @@ func _ready():
 	spawn()
 	hp = 28
 	updatehp()
+	updateammo()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	adjust_camera()
+	if Input.is_action_just_pressed("pause") and takes_input:
+		subscreen.start(self)
 
 func _physics_process(delta):
 	#beaming in anim
@@ -258,9 +268,25 @@ func jump():
 
 func shoot():
 	#this will check for equipped weapon etc.
-	var blts = get_tree().get_nodes_in_group("bullets").size()
-	if blts < 3 && busteranim < 0.15: #must be 0.1s after shooting; shoot every 6 frames
-		buster()
+	if ammo[equipped] < ammocost[equipped]:
+		return
+	match equipped:
+		0:
+			var blts = get_tree().get_nodes_in_group("bullets").size()
+			if blts < 3 && busteranim < 0.15: #must be 0.1s after shooting; shoot every 6 frames
+				buster()
+		2:
+			var blts = get_tree().get_nodes_in_group("bullets").size()
+			if blts < 3 && busteranim < 0.15: #must be 0.1s after shooting; shoot every 6 frames
+				ammo[equipped] -= ammocost[equipped]
+				updateammo()
+				flamethrower()
+		6:
+			var blts = get_tree().get_nodes_in_group("bullets").size()
+			if blts < 1 && busteranim < 0.15: #must be 0.1s after shooting; shoot every 6 frames
+				ammo[equipped] -= ammocost[equipped]
+				updateammo()
+				axe()
 	
 func buster():
 	bustersound.play()
@@ -283,6 +309,50 @@ func buster():
 	
 	get_parent().add_child(blt)
 	blt.add_to_group("bullets")
+
+func flamethrower():
+	$Flame.play()
+	busteranim = busterout
+	
+	var fire = flame.instantiate()
+	
+	if animated_sprite.flip_h:
+		$Muzzle.position.x = -16
+		fire.direction = -1
+	else:
+		$Muzzle.position.x = 16
+	
+	if is_on_floor():
+		$Muzzle.position.y = 5
+	else:
+		$Muzzle.position.y = -1
+	
+	fire.position = $Muzzle.global_position
+	
+	get_parent().add_child(fire)
+	fire.add_to_group("bullets")
+
+func axe():
+	bustersound.play()
+	busteranim = busterout
+	
+	var ax = thrownaxe.instantiate()
+	
+	if animated_sprite.flip_h:
+		$Muzzle.position.x = -16
+		ax.direction = -1
+	else:
+		$Muzzle.position.x = 16
+	
+	if is_on_floor():
+		$Muzzle.position.y = 5
+	else:
+		$Muzzle.position.y = -1
+	
+	ax.position = $Muzzle.global_position
+	
+	get_parent().add_child(ax)
+	ax.add_to_group("bullets")
 
 func damage(value, pos = null):
 	hp = move_toward(hp,0,value)
@@ -317,6 +387,16 @@ func updatehp():
 	lifebar.position.y = 108 - 2*hp
 	lifebar.region_enabled = true
 
+func updateammo():
+	if equipped == 0:
+		ammobarbg.visible = false
+	else:
+		ammobarbg.visible = true
+	ammobar.frame = equipped
+	ammobar.region_rect = Rect2(0,56-2*ammo[equipped],54,2*ammo[equipped])
+	ammobar.position.y = 108 - 2*ammo[equipped]
+	ammobar.region_enabled = true
+	
 #still playing landing sound
 func death():
 	takes_input = false
