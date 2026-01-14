@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
-const SPEED = 200.0 #4 pixels per frame
-const YSPEED = 300.0
+var SPEED = 200.0 #4 pixels per frame
+var YSPEED = 300.0
 var direction = 1
 var angle = 0
 

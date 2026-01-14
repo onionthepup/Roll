@@ -315,10 +315,12 @@ func flamethrower():
 	busteranim = busterout
 	
 	var fire = flame.instantiate()
+	#var fire2 = flame.instantiate()
 	
 	if animated_sprite.flip_h:
 		$Muzzle.position.x = -16
 		fire.direction = -1
+		#fire2.direction = -1
 	else:
 		$Muzzle.position.x = 16
 	
@@ -328,9 +330,18 @@ func flamethrower():
 		$Muzzle.position.y = -1
 	
 	fire.position = $Muzzle.global_position
+	#fire2.position = $Muzzle.global_position
+	
+	#fire.angle = PI/2
+	
+	#fire2.angle = PI
+	#fire2.SPEED *= 1.1
+	#fire2.YSPEED *= 0
 	
 	get_parent().add_child(fire)
+	#get_parent().add_child(fire2)
 	fire.add_to_group("bullets")
+	#fire2.add_to_group("bullets")
 
 func axe():
 	bustersound.play()
