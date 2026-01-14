@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dme7rbso5dib1"]
+[gd_scene load_steps=18 format=3 uid="uid://dme7rbso5dib1"]
 
 [ext_resource type="Texture2D" uid="uid://bwwkhb1v5ybd4" path="res://img/tile/menu.png" id="1_ku54s"]
 [ext_resource type="Script" path="res://sysscenes/subscreen.gd" id="2_7nl65"]
@@ -9,8 +9,11 @@
 [ext_resource type="Texture2D" uid="uid://byrtkau1jpccm" path="res://img/system/icon2.png" id="7_q5mm0"]
 [ext_resource type="Texture2D" uid="uid://5cmhukctjo2d" path="res://img/system/name2.png" id="8_gmjgt"]
 [ext_resource type="Texture2D" uid="uid://dwoen0bwlrl67" path="res://img/system/ammobar2.png" id="9_0cl5l"]
+[ext_resource type="Texture2D" uid="uid://c5sdu06vwo431" path="res://img/system/icon3.png" id="10_kctt6"]
 [ext_resource type="Texture2D" uid="uid://oh5mt6habtxs" path="res://img/system/icon6.png" id="10_ssplc"]
+[ext_resource type="Texture2D" uid="uid://5tf5rvq5sxos" path="res://img/system/name3.png" id="11_0omav"]
 [ext_resource type="Texture2D" uid="uid://barmles4h17pn" path="res://img/system/name6.png" id="11_4i5ua"]
+[ext_resource type="Texture2D" uid="uid://sprxdspjj3b7" path="res://img/system/ammobar3.png" id="12_5lghg"]
 [ext_resource type="Texture2D" uid="uid://ciuirsmun5lcl" path="res://img/system/ammobar6.png" id="12_u5gxo"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7b6n3"]
@@ -87,18 +90,17 @@ vframes = 3
 
 [node name="Icon3" type="Sprite2D" parent="."]
 position = Vector2(24, 64)
-texture = ExtResource("5_e21eh")
+texture = ExtResource("10_kctt6")
 hframes = 3
-frame = 1
 
 [node name="Name3" type="Sprite2D" parent="."]
 position = Vector2(72, 60)
-texture = ExtResource("5_ni6q7")
+texture = ExtResource("11_0omav")
 vframes = 3
 
 [node name="Ammo3" type="Sprite2D" parent="."]
 position = Vector2(69, 68)
-texture = ExtResource("6_ykayv")
+texture = ExtResource("12_5lghg")
 vframes = 3
 
 [node name="Icon4" type="Sprite2D" parent="."]

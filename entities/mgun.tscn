@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://bhi0rm40xl4xh"]
+
+[ext_resource type="Script" path="res://entities/mgun.gd" id="1_w47n2"]
+[ext_resource type="Texture2D" uid="uid://tjjwocanx6yj" path="res://img/char/mgun.png" id="2_s8ifl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n7rqb"]
+size = Vector2(4, 2)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vv851"]
+size = Vector2(8, 6)
+
+[node name="Bullet" type="CharacterBody2D"]
+collision_layer = 0
+motion_mode = 1
+script = ExtResource("1_w47n2")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_s8ifl")
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_n7rqb")
+
+[node name="Visible" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(0, -1.19209e-07)
+scale = Vector2(0.4, 0.3)
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 32
+
+[node name="Shape" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_vv851")

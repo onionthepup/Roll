@@ -14,6 +14,7 @@ var bullet = preload("res://entities/bullet.tscn")
 var blastelem = preload("res://entities/blastelem.tscn")
 
 var flame = preload("res://entities/flame.tscn")
+var machbullet = preload("res://entities/mgun.tscn")
 var thrownaxe = preload("res://entities/axe.tscn")
 
 #movement vars
@@ -49,8 +50,8 @@ var firstbeam = false
 @onready var checkpoint = global_position
 
 #var hp = 28
-var ammo = [28,-1,28,-1,-1,-1,28,-1,-1]
-var ammocost = [0,0,1,0,0,0,4,0,0]
+var ammo = [28,-1,28,28,-1,-1,28,-1,-1]
+var ammocost = [0,0,1,0.5,0,0,4,0,0]
 
 var weaponlist = [Roll_Buster.new(), Power_Shot.new(), NeedleShot.new(), null]
 var equipped = 0
@@ -162,7 +163,7 @@ func _physics_process(delta):
 		velocity.y = ladderclimb * climbspeed
 	
 	#handle shooting
-	if Input.is_action_just_pressed("shoot") and takes_input:
+	if takes_input and (Input.is_action_just_pressed("shoot") or (Input.is_action_pressed("shoot") and equipped == 3)):
 		shoot()
 	
 	if busteranim > 0:
@@ -283,6 +284,12 @@ func shoot():
 				ammo[equipped] -= ammocost[equipped]
 				updateammo()
 				flamethrower()
+		3:
+			var blts = get_tree().get_nodes_in_group("bullets").size()
+			if blts < 5 && busteranim < 0.16: #must be 0.1s after shooting; shoot every 6 frames
+				ammo[equipped] -= ammocost[equipped]
+				updateammo()
+				machinegun()
 		6:
 			var blts = get_tree().get_nodes_in_group("bullets").size()
 			if blts < 1 && busteranim < 0.15: #must be 0.1s after shooting; shoot every 6 frames
@@ -344,6 +351,32 @@ func flamethrower():
 	#get_parent().add_child(fire2)
 	fire.add_to_group("bullets")
 	#fire2.add_to_group("bullets")
+
+func machinegun():
+	bustersound.play()
+	busteranim = busterout
+	
+	var blt = machbullet.instantiate()
+	
+	var spray = randi_range(-2,2)
+	
+	if animated_sprite.flip_h:
+		$Muzzle.position.x = -16
+		blt.direction = -1
+	else:
+		$Muzzle.position.x = 16 
+	
+	if is_on_floor():
+		$Muzzle.position.y = 5
+	else:
+		$Muzzle.position.y = -1
+	
+	blt.position = $Muzzle.global_position
+	blt.position.y += spray
+	print(blt.position.y)
+	
+	get_parent().add_child(blt)
+	blt.add_to_group("bullets")
 
 func axe():
 	bustersound.play()
@@ -420,6 +453,7 @@ func updatehp():
 	lifebar.position.y = 108 - 2*hp
 	lifebar.region_enabled = true
 
+#maybe do ceiling of ammo to better reflect mgun
 func updateammo():
 	if equipped == 0:
 		ammobarbg.visible = false
