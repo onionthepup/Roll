@@ -374,6 +374,3 @@ class RollBuster:
 class NeedleShot:
 	var id = 1
 	var cost = 0.25
-
-
-

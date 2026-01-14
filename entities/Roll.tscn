@@ -353,4 +353,4 @@ offset = Vector2(-3, -28)
 position = Vector2(132, 100)
 sprite_frames = SubResource("SpriteFrames_qmybu")
 autoplay = "default"
-frame_progress = 0.119741
+frame_progress = 0.9027
