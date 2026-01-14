@@ -23,8 +23,12 @@ func _process(delta):
 		just = false
 		return
 	
-	if Input.is_action_just_pressed("pause"):
-		end()
+	if Input.is_action_just_pressed("pause") or Input.is_action_just_pressed("jump"):
+		end(true)
+		return
+	
+	if Input.is_action_just_pressed("shoot"):
+		end(false)
 		return
 	
 	var menucommand = 0
@@ -51,9 +55,10 @@ func start(getroll):
 	operating = true
 	just = true
 
-func end():
+func end(confirm):
 	hide()
-	roll.equipped = equipped
+	if confirm:
+		roll.equipped = equipped
 	operating = false
 	get_tree().paused = false
 	roll.updateammo()
