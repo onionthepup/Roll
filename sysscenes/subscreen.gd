@@ -59,6 +59,7 @@ func end(confirm):
 	hide()
 	if confirm:
 		roll.equipped = equipped
+		clear_bullets()
 	operating = false
 	get_tree().paused = false
 	roll.updateammo()
@@ -93,4 +94,5 @@ func update_weapons():
 
 #clear all bullets onscreen
 func clear_bullets():
-	pass
+	for bullet in get_tree().get_nodes_in_group("bullets"):
+		bullet.queue_free()
