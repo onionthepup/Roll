@@ -69,6 +69,8 @@ func _process(delta):
 		subscreen.start(self)
 
 func _physics_process(delta):
+	leastfull()
+	
 	#beaming in anim
 	if beaming and is_on_floor():
 		if firstbeam:
@@ -392,6 +394,26 @@ func heal(value):
 	if hp > maxhp:
 		hp = maxhp
 	updatehp()
+
+func fill(value):
+	if ammo[equipped] < 28:
+		ammo[equipped] += value
+		updateammo()
+	else:
+		ammo[leastfull()] += value
+
+func leastfull(): #returns ID of weapon with least ammo
+	var ammofilter = ammo.filter(func(element): return element != -1)
+	var min = ammofilter.min()
+	for i in range(9):
+		if ammo[i] == min:
+			return i
+
+func full(): #check if all weapons full
+	for i in range(9):
+		if ammo[i] > -1 and ammo[i] < 28:
+			return false
+	return true
 
 func updatehp():
 	lifebar.region_rect = Rect2(0,56-2*hp,6,2*hp)
