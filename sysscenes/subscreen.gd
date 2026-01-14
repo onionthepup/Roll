@@ -76,10 +76,16 @@ func update_weapons():
 			icons[i].frame = 0
 			names[i].frame = 0
 			ammos[i].frame = 0
+			ammos[i].region_rect = Rect2(0,0,2*roll.ammo[i],18)
+			ammos[i].position.x = 41 + roll.ammo[i]
+			ammos[i].region_enabled = true
 		elif roll.ammo[i] >= 0:
 			icons[i].frame = 1
 			names[i].frame = 1
 			ammos[i].frame = 1
+			ammos[i].region_rect = Rect2(0,0,2*roll.ammo[i],18)
+			ammos[i].position.x = 41 + roll.ammo[i]
+			ammos[i].region_enabled = true
 		else:
 			icons[i].frame = 2
 			names[i].frame = 2
