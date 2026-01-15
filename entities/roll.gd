@@ -16,6 +16,7 @@ var blastelem = preload("res://entities/blastelem.tscn")
 var flame = preload("res://entities/flame.tscn")
 var machbullet = preload("res://entities/mgun.tscn")
 var thrownaxe = preload("res://entities/axe.tscn")
+var madeblock = preload("res://entities/block.tscn")
 
 #movement vars
 var direction = 0
@@ -42,6 +43,12 @@ var hurtanim = 0.4 #time spent recoiling from dmg
 var invin = 1 #time of i-frames/flashing gained
 var hurttime = 0 #timer
 
+#lifting block vars
+var lifting = false
+var liftblock
+var throwanim = 0.0
+var throwout = 0.25
+
 var takes_input = true #whether player can input anything!
 
 var beaming = false
@@ -50,8 +57,8 @@ var firstbeam = false
 @onready var checkpoint = global_position
 
 #var hp = 28
-var ammo = [28,-1,28,28,-1,-1,28,-1,-1]
-var ammocost = [0,0,1,0.5,0,0,4,0,0]
+var ammo = [28,-1,28,28,-1,-1,28,-1,28]
+var ammocost = [0,0,1,0.5,0,0,4,0,4]
 
 var weaponlist = [Roll_Buster.new(), Power_Shot.new(), NeedleShot.new(), null]
 var equipped = 0
@@ -125,7 +132,7 @@ func _physics_process(delta):
 	#headbonk
 	
 	# Handle Jump.
-	if Input.is_action_just_pressed("jump") and takes_input:
+	if Input.is_action_just_pressed("jump") and takes_input and not lifting:
 		if is_on_floor():
 			jump()
 		elif on_ladder:
@@ -171,6 +178,10 @@ func _physics_process(delta):
 		if on_ladder:
 			velocity.y = 0
 	
+	if throwanim > 0:
+		throwanim -= delta
+		velocity.x = 0
+	
 	#hurt movement
 	if hurttime > (invin-hurtanim):
 		velocity.x = direction * -45
@@ -186,10 +197,16 @@ func update_animation():
 	var state = ""
 	if busteranim > 0:
 		state = "_shoot"
+	elif throwanim > 0:
+		state = "_throw"
+	elif lifting:
+		state = "_lift"
 	#can add _climb and _throw states!
 	
 	if beaming:
 		change_animation("beam")
+	elif throwanim > 0:
+		change_animation("idle_throw")
 	elif hurttime > (invin-hurtanim):
 		change_animation("hurt")
 	elif on_ladder:
@@ -209,10 +226,12 @@ func update_animation():
 			change_animation("walk_shoot")
 		else:
 			animated_sprite.play("accel")
-	elif busteranim > 0:
-		change_animation("shoot") #animated_sprite.play("shoot")
+#	elif busteranim > 0:
+#		change_animation("shoot") #animated_sprite.play("shoot")
+#	else:
+#		animated_sprite.play("idle")
 	else:
-		animated_sprite.play("idle")
+		change_animation("idle" + state)
 	flippy()
 
 func change_animation(newanim):
@@ -232,6 +251,7 @@ func flippy():
 		$Shape.position.x = 1
 	if on_ladder:
 		$Shape.position.x = 0
+	adjust_muzzle()
 
 func adjust_camera():
 	if position.y < $Camera.limit_top:
@@ -271,31 +291,61 @@ func jump():
 
 func shoot():
 	#this will check for equipped weapon etc.
-	if ammo[equipped] < ammocost[equipped]:
+	adjust_muzzle()
+	if ammo[equipped] < ammocost[equipped] and equipped != 8:
 		return
 	match equipped:
-		0:
+		0: #r.buster
 			var blts = get_tree().get_nodes_in_group("bullets").size()
 			if blts < 3 && busteranim < 0.15: #must be 0.1s after shooting; shoot every 6 frames
 				buster()
-		2:
+		2: #f.blast
 			var blts = get_tree().get_nodes_in_group("bullets").size()
 			if blts < 3 && busteranim < 0.15: #must be 0.1s after shooting; shoot every 6 frames
 				ammo[equipped] -= ammocost[equipped]
 				updateammo()
 				flamethrower()
-		3:
+		3: #machinegun
 			var blts = get_tree().get_nodes_in_group("bullets").size()
 			if blts < 5 && busteranim < 0.16: #must be 0.1s after shooting; shoot every 6 frames
 				ammo[equipped] -= ammocost[equipped]
 				updateammo()
 				machinegun()
-		6:
+		6: #axe
 			var blts = get_tree().get_nodes_in_group("bullets").size()
 			if blts < 1 && busteranim < 0.15: #must be 0.1s after shooting; shoot every 6 frames
 				ammo[equipped] -= ammocost[equipped]
 				updateammo()
 				axe()
+		8: #block!
+			if lifting: #throws a block!
+				throw_block()
+			elif not $BlockArea.has_overlapping_bodies(): #makes a block!
+				if ammo[equipped] < ammocost[equipped]:
+					return
+				ammo[equipped] -= ammocost[equipped]
+				updateammo()
+				makeblock()
+			elif is_on_floor() and not lifting: #lifts a block!
+				for body in $BlockArea.get_overlapping_bodies():
+					if body is Block:
+						body.lifted(self, $CarryBlock.position)
+						lifting = true
+						liftblock = body
+						return
+	
+func adjust_muzzle():
+	if animated_sprite.flip_h:
+		$Muzzle.position.x = -16
+		$BlockArea.position.x = -60
+	else:
+		$Muzzle.position.x = 16
+		$BlockArea.position.x = 0
+	
+	if is_on_floor():
+		$Muzzle.position.y = 5
+	else:
+		$Muzzle.position.y = -1
 	
 func buster():
 	bustersound.play()
@@ -304,15 +354,7 @@ func buster():
 	var blt = bullet.instantiate()
 	
 	if animated_sprite.flip_h:
-		$Muzzle.position.x = -16
 		blt.direction = -1
-	else:
-		$Muzzle.position.x = 16
-	
-	if is_on_floor():
-		$Muzzle.position.y = 5
-	else:
-		$Muzzle.position.y = -1
 	
 	blt.position = $Muzzle.global_position
 	
@@ -327,16 +369,8 @@ func flamethrower():
 	#var fire2 = flame.instantiate()
 	
 	if animated_sprite.flip_h:
-		$Muzzle.position.x = -16
 		fire.direction = -1
 		#fire2.direction = -1
-	else:
-		$Muzzle.position.x = 16
-	
-	if is_on_floor():
-		$Muzzle.position.y = 5
-	else:
-		$Muzzle.position.y = -1
 	
 	fire.position = $Muzzle.global_position
 	#fire2.position = $Muzzle.global_position
@@ -358,22 +392,13 @@ func machinegun():
 	
 	var blt = machbullet.instantiate()
 	
-	var spray = randi_range(-2,2)
+	var spray = randi_range(-3,2)
 	
 	if animated_sprite.flip_h:
-		$Muzzle.position.x = -16
 		blt.direction = -1
-	else:
-		$Muzzle.position.x = 16 
-	
-	if is_on_floor():
-		$Muzzle.position.y = 5
-	else:
-		$Muzzle.position.y = -1
 	
 	blt.position = $Muzzle.global_position
 	blt.position.y += spray
-	print(blt.position.y)
 	
 	get_parent().add_child(blt)
 	blt.add_to_group("bullets")
@@ -385,20 +410,34 @@ func axe():
 	var ax = thrownaxe.instantiate()
 	
 	if animated_sprite.flip_h:
-		$Muzzle.position.x = -16
 		ax.direction = -1
-	else:
-		$Muzzle.position.x = 16
-	
-	if is_on_floor():
-		$Muzzle.position.y = 5
-	else:
-		$Muzzle.position.y = -1
 	
 	ax.position = $Muzzle.global_position
 	
 	get_parent().add_child(ax)
 	ax.add_to_group("bullets")
+
+func makeblock():
+	var block = madeblock.instantiate()
+	
+	block.position = $BlockArea/BlockSpawn.global_position
+	
+	get_parent().add_child(block)
+
+func throw_block():
+	throwanim = throwout
+	
+	if animated_sprite.flip_h:
+		liftblock.direction = -1
+		
+	liftblock.reparent(get_parent())
+		
+	liftblock.add_to_group("bullets")
+	
+	liftblock.thrown()
+	
+	liftblock = null
+	lifting = false
 
 func damage(value, pos = null):
 	hp = move_toward(hp,0,value)

@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3 uid="uid://p7qx608sd11d"]
+
+[ext_resource type="Script" path="res://entities/block.gd" id="1_alswx"]
+[ext_resource type="Texture2D" uid="uid://r37a05nuqn8g" path="res://img/char/block.png" id="1_fqkan"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p3k07"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ny6cf"]
+size = Vector2(32, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_slomh"]
+size = Vector2(36, 36)
+
+[node name="Block" type="CharacterBody2D"]
+script = ExtResource("1_alswx")
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_p3k07")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_fqkan")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 48
+
+[node name="Shape" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, 16)
+shape = SubResource("RectangleShape2D_ny6cf")
+
+[node name="Visible" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(-38, -12.6667)
+scale = Vector2(1, 0.333333)
+rect = Rect2(-10, -10, 96, 96)
+
+[node name="ThrownHitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 32
+monitoring = false
+
+[node name="Shape" type="CollisionShape2D" parent="ThrownHitbox"]
+shape = SubResource("RectangleShape2D_slomh")

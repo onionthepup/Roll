@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=3 uid="uid://b7hh01wjne1t2"]
+
+[ext_resource type="Script" path="res://entities/cap_am_small.gd" id="1_qd3bw"]
+[ext_resource type="Texture2D" uid="uid://b6m15tk8ch0dw" path="res://img/char/ammocapsmall.png" id="2_sshy4"]
+[ext_resource type="AudioStream" uid="uid://dd0sfmlmagfib" path="res://sound/refill.wav" id="3_ah88a"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_grth5"]
+size = Vector2(8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1xh0o"]
+atlas = ExtResource("2_sshy4")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vfsxq"]
+atlas = ExtResource("2_sshy4")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8rj87"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1xh0o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vfsxq")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tbcej"]
+radius = 4.0
+
+[node name="Cap" type="CharacterBody2D"]
+process_mode = 3
+collision_layer = 0
+script = ExtResource("1_qd3bw")
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_grth5")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_8rj87")
+autoplay = "default"
+frame_progress = 0.000291767
+
+[node name="Area" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 64
+
+[node name="Shape" type="CollisionShape2D" parent="Area"]
+shape = SubResource("CircleShape2D_tbcej")
+
+[node name="Sound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_ah88a")

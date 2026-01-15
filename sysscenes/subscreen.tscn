@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dme7rbso5dib1"]
+[gd_scene load_steps=21 format=3 uid="uid://dme7rbso5dib1"]
 
 [ext_resource type="Texture2D" uid="uid://bwwkhb1v5ybd4" path="res://img/tile/menu.png" id="1_ku54s"]
 [ext_resource type="Script" path="res://sysscenes/subscreen.gd" id="2_7nl65"]
@@ -15,6 +15,9 @@
 [ext_resource type="Texture2D" uid="uid://barmles4h17pn" path="res://img/system/name6.png" id="11_4i5ua"]
 [ext_resource type="Texture2D" uid="uid://sprxdspjj3b7" path="res://img/system/ammobar3.png" id="12_5lghg"]
 [ext_resource type="Texture2D" uid="uid://ciuirsmun5lcl" path="res://img/system/ammobar6.png" id="12_u5gxo"]
+[ext_resource type="Texture2D" uid="uid://b5q8cp8r753fj" path="res://img/system/icon8.png" id="16_coaba"]
+[ext_resource type="Texture2D" uid="uid://yveqtq6am7w4" path="res://img/system/name8.png" id="17_o2qdg"]
+[ext_resource type="Texture2D" uid="uid://flqsjc2u6j7" path="res://img/system/ammobar8.png" id="18_dddq5"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7b6n3"]
 texture = ExtResource("1_ku54s")
@@ -168,16 +171,15 @@ vframes = 3
 
 [node name="Icon8" type="Sprite2D" parent="."]
 position = Vector2(24, 144)
-texture = ExtResource("5_e21eh")
+texture = ExtResource("16_coaba")
 hframes = 3
-frame = 1
 
 [node name="Name8" type="Sprite2D" parent="."]
 position = Vector2(72, 140)
-texture = ExtResource("5_ni6q7")
+texture = ExtResource("17_o2qdg")
 vframes = 3
 
 [node name="Ammo8" type="Sprite2D" parent="."]
 position = Vector2(69, 148)
-texture = ExtResource("6_ykayv")
+texture = ExtResource("18_dddq5")
 vframes = 3

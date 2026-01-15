@@ -4,7 +4,7 @@ class_name Pickup
 @onready var area : Area2D  = $Area
 @onready var sprite : AnimatedSprite2D  = $Sprite
 @onready var sound : AudioStreamPlayer = $Sound
-var heal = 10
+@export var heal = 10
 var operating = false
 var delay = true
 var delay2 = 3
