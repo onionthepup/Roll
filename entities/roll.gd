@@ -1,5 +1,5 @@
 extends Entity
-
+class_name Roll
 
 @onready var animated_sprite : AnimatedSprite2D = $Sprite
 @onready var landsound : AudioStreamPlayer = $Landing
@@ -17,6 +17,17 @@ var flame = preload("res://entities/flame.tscn")
 var machbullet = preload("res://entities/mgun.tscn")
 var thrownaxe = preload("res://entities/axe.tscn")
 var madeblock = preload("res://entities/block.tscn")
+
+var palette0 = preload("res://palettes/roll0.png")
+var palette1 = preload("res://palettes/roll1.png")
+var palette2 = preload("res://palettes/roll2.png")
+var palette3 = preload("res://palettes/roll3.png")
+var palette4 = preload("res://palettes/roll4.png")
+var palette5 = preload("res://palettes/roll5.png")
+var palette6 = preload("res://palettes/roll6.png")
+var palette7 = preload("res://palettes/roll7.png")
+var palette8 = preload("res://palettes/roll8.png")
+var palettes = [palette0,palette1,palette2,palette3,palette4,palette5,palette6,palette5,palette8]
 
 #movement vars
 var direction = 0
@@ -58,10 +69,26 @@ var firstbeam = false
 
 #var hp = 28
 var ammo = [28,-1,28,28,-1,-1,28,-1,28]
-var ammocost = [0,0,1,0.5,0,0,4,0,4]
+var ammocost = [0,0,1,0.5,0,0,2,0,4]
 
 var weaponlist = [Roll_Buster.new(), Power_Shot.new(), NeedleShot.new(), null]
 var equipped = 0
+
+#color attempt
+#var dress = Color8(216,40,0) #AKA nesred
+#var ribbon = Color8(0,144,56) #AKA nesgreen
+#var hair = Color8(248,184,0)
+#
+#var nesyellow = Color8(240,188,60)
+#var nesdgray = Color8(116,116,116)
+#var nespurple = Color8(128,0,240)
+#var neslgray = Color8(188,188,188)
+#var nesblue = Color8(0,112,236)
+#var nesbrown = Color8(200,76,12)
+#
+#var redred = Color8(255,0,0)
+#var greengreen = Color8(0,255,0)
+#var blueblue = Color8(0,0,255)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -97,7 +124,7 @@ func _physics_process(delta):
 			animated_sprite.visible = true
 	
 	# get on ladders, detect when NOT on ladder
-	if $LadderDetector.is_colliding() or $UpperLadderDetector.is_colliding():
+	if $LadderDetector.has_overlapping_bodies():
 		if Input.is_action_pressed("up") and takes_input:
 			on_ladder = true
 			position.x = 16 * round((position.x+8)/16) - 8
@@ -105,7 +132,7 @@ func _physics_process(delta):
 		on_ladder = false
 	
 	#get down on ladder
-	if $UnderLadderDetector.is_colliding() and not $LadderDetector.is_colliding() and Input.is_action_pressed("down"):
+	if $UnderLadderDetector.has_overlapping_bodies() and not $LadderDetector.has_overlapping_bodies() and Input.is_action_pressed("down"):
 		position.x = 16 * round((position.x+8)/16) - 8
 		position.y -= 1
 		on_ladder = true
@@ -215,7 +242,7 @@ func update_animation():
 			animated_sprite.pause()
 		else:
 			animated_sprite.play()
-			if $LadderDetector.is_colliding() and not $UpperLadderDetector.is_colliding():
+			if $LadderDetector.has_overlapping_bodies() and not $UpperLadderDetector.has_overlapping_bodies():
 				animated_sprite.play("climb_top")
 	elif not is_on_floor():
 		animated_sprite.play("jump" + state)
@@ -252,6 +279,12 @@ func flippy():
 	if on_ladder:
 		$Shape.position.x = 0
 	adjust_muzzle()
+
+#func recolor(dresscolor, ribboncolor, pocketcolor = ribboncolor):
+	#pass
+
+func recolor(palette):
+	$Sprite.material.set_palette(palettes[palette])
 
 func adjust_camera():
 	if position.y < $Camera.limit_top:
