@@ -59,6 +59,7 @@ func end(confirm):
 	hide()
 	if confirm:
 		roll.equipped = equipped
+		roll.recolor(equipped)
 		clear_bullets()
 	operating = false
 	get_tree().paused = false

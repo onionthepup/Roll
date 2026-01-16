@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://b7hh01wjne1t2"]
 
-[ext_resource type="Script" path="res://entities/cap_am_small.gd" id="1_qd3bw"]
+[ext_resource type="Script" uid="uid://bna87bsxv4vdw" path="res://entities/cap_am_small.gd" id="1_qd3bw"]
 [ext_resource type="Texture2D" uid="uid://b6m15tk8ch0dw" path="res://img/char/ammocapsmall.png" id="2_sshy4"]
 [ext_resource type="AudioStream" uid="uid://dd0sfmlmagfib" path="res://sound/refill.wav" id="3_ah88a"]
 

@@ -10,7 +10,11 @@ func _ready():
 	hitbox.body_entered.connect(hit)
 
 func hit(body):
-	body.damage(6)
+	if body is Roll:
+		if speed < 0:
+			self.queue_free()
+	else:
+		body.damage(6)
 	#self.queue_free()
 
 func _physics_process(delta):

@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://1auypeauelai"]
 
-[ext_resource type="Script" path="res://stages/test man.gd" id="1_yley2"]
+[ext_resource type="Script" uid="uid://qafd8bgo67xu" path="res://stages/test man.gd" id="1_yley2"]
 [ext_resource type="PackedScene" uid="uid://bccqiphax4b3c" path="res://entities/Roll.tscn" id="2_3ss84"]
 [ext_resource type="Texture2D" uid="uid://d2y16jf35w6xn" path="res://img/tile/temp.png" id="4_a7bsa"]
 [ext_resource type="PackedScene" uid="uid://du76plegllusi" path="res://entities/Met.tscn" id="5_85ksi"]
@@ -11,16 +11,8 @@
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_j6g0x"]
 texture = ExtResource("4_a7bsa")
 0:0/0 = 0
-0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-0:0/0/physics_layer_0/angular_velocity = 0.0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
-0:0/0/physics_layer_1/linear_velocity = Vector2(0, 0)
-0:0/0/physics_layer_1/angular_velocity = 0.0
 1:0/0 = 0
-1:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-1:0/0/physics_layer_0/angular_velocity = 0.0
-1:0/0/physics_layer_1/linear_velocity = Vector2(0, 0)
-1:0/0/physics_layer_1/angular_velocity = 0.0
 1:0/0/physics_layer_1/polygon_0/points = PackedVector2Array(-4, -8, 4, -8, 4, 8, -4, 8)
 
 [sub_resource type="TileSet" id="TileSet_vwbdq"]
@@ -59,7 +51,7 @@ position = Vector2(712, 80)
 position = Vector2(456, -32)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(0, 4)
+position = Vector2(0, 5)
 shape = SubResource("RectangleShape2D_yf0rk")
 one_way_collision = true
 
